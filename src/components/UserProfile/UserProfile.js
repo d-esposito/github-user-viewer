@@ -1,15 +1,27 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import UserHeader from "../UserHeader";
 import UserRepoList from "../UserRepoList";
+import { OctokitContext } from "../../contexts/OctokitContext";
 import "./UserProfile.css";
 
 
 const UserProfile = () => {
-    const profile = {
-        'login': 'd-esposito',
-        'html_url': 'https://github.com/d-esposito/',
-        'avatar_url': 'https://avatars.githubusercontent.com/u/55059460?v=4'
-    };
+    const [profile, setProfile] = useState({});
+
+    const octokit = useContext(OctokitContext);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const { data } = await octokit.request("GET /users/torvalds");
+                setProfile(data);
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+            }
+        };
+
+        fetchProfile();
+    }, [octokit]);
 
     return (
         <div className="profileContainer">

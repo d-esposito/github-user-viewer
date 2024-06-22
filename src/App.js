@@ -1,10 +1,13 @@
 import './App.css';
 import UserProfile from './components/UserProfile';
+import { OctokitProvider } from './contexts/OctokitContext';
 
 function App() {
   return (
     <div className='app'>
-      <UserProfile />
+      <OctokitProvider>
+        <UserProfile />
+      </OctokitProvider>
     </div>
   );
 }
