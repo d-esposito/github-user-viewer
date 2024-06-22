@@ -1,39 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { OctokitContext } from "../../contexts/OctokitContext";
 import './UserRepoList.css';
 
 
 const UserRepoList = ({ username }) => {
     const [searchString, setSearchString] = useState("");
-    const [repos, setRepos] = useState([{
-                'id': 1,
-                'name': 'hello-world',
-                'description': 'This is your first repo!',
-                'stargazers_count': 800,
-                'language': 'JavaScript'
-            },
-            {
-                'id': 2,
-                'name': 'another-repo',
-                'description': 'This is your second repo!',
-                'stargazers_count': 790,
-                'language': 'C#'
-            },
-            {
-                'id': 3,
-                'name': 'agi',
-                'description': 'Taking over the world with this one',
-                'stargazers_count': 666,
-                'language': 'Just an actual Brain'
-            },
-            {
-                'id': 4,
-                'name': 'orva-app',
-                'description': 'Stolen code (shh don\'t tell anyone)',
-                'stargazers_count': 42,
-                'language': 'Node.JS'
-            }]);
+    const [repos, setRepos] = useState([]);
     const [filteredRepos, setFilteredRepos] = useState([]);
+    const octokit = useContext(OctokitContext);
+
+    const fetchRepos = useCallback(async () => {
+        const { data } = await octokit.request(`GET /users/${username}/repos`);
+        setRepos(data);
+    }, [octokit, username]);
+
+    useEffect(() => {
+        fetchRepos();
+    }, [fetchRepos]);
 
     useEffect(() => {
         const filtered = repos.filter((repo) =>
