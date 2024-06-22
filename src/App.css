@@ -1,5 +1,8 @@
 .app {
-  background-color: #282c34;
+  --main-bg-color: #282c34;
+  --main-border-color: #3d4452;
+
+  background-color: var(--main-bg-color);
   min-height: 100vh;
   min-width: 100vw;
 
