@@ -11,9 +11,12 @@ const UserProfile = () => {
     const octokit = useContext(OctokitContext);
 
     useEffect(() => {
+        const path = window.location.pathname.slice(1);
+        const username = path ? path.split('/')[0] : null;
+
         const fetchProfile = async () => {
             try {
-                const { data } = await octokit.request("GET /users/torvalds");
+                const { data } = await octokit.request(`GET /users/${username}`);
                 setProfile(data);
             } catch (error) {
                 console.error('Error fetching profile:', error);
