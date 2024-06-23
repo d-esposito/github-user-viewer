@@ -8,11 +8,16 @@ const UserRepoList = ({ username }) => {
     const [searchString, setSearchString] = useState("");
     const [repos, setRepos] = useState([]);
     const [filteredRepos, setFilteredRepos] = useState([]);
+    const [errorMessage, setErrorMessage] = useState(null);
     const octokit = useContext(OctokitContext);
 
     const fetchRepos = useCallback(async () => {
-        const { data } = await octokit.request(`GET /users/${username}/repos`);
-        setRepos(data);
+        try {
+            const { data } = await octokit.request(`GET /users/${username}/repos`);
+            setRepos(data);
+        } catch (error) {
+            setErrorMessage(`There was an error when retrieving the user's repos...`);
+        }
     }, [octokit, username]);
 
     useEffect(() => {
@@ -21,11 +26,15 @@ const UserRepoList = ({ username }) => {
 
     useEffect(() => {
         const filtered = repos.filter((repo) =>
-            repo.name.toLowerCase().includes(searchString.toLowerCase()) ||
-            repo.description.toLowerCase().includes(searchString.toLowerCase())
+            repo.name?.toLowerCase().includes(searchString.toLowerCase()) ||
+            repo.description?.toLowerCase().includes(searchString.toLowerCase())
         );
         setFilteredRepos(filtered);
     }, [searchString, repos]);
+
+    if (errorMessage) {
+        return (<h2>{errorMessage}</h2>);
+    }
 
     return (
         <div className="repoListContainer">
