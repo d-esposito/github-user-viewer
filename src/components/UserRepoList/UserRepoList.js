@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { OctokitContext } from "../../contexts/OctokitContext";
+import star from '../../assets/star.svg';
 import './UserRepoList.css';
 
 
@@ -76,7 +77,7 @@ const UserRepoList = ({ username }) => {
                     <ul>
                         {filteredRepos.map((repo) => (
                             <li key={repo.id}>
-                                <span><h4>{repo.name}</h4><h6>Stars: {repo.stargazers_count}</h6></span>
+                                <span><h4>{repo.name}</h4><h4><img src={star} alt="Stars" className="star" />: {repo.stargazers_count}</h4></span>
                                 <span><p>{repo.description}</p><code>{repo.language}</code></span>
                             </li>
                         ))}

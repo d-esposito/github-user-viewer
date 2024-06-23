@@ -55,3 +55,11 @@ li > span {
     align-items: center;
     justify-content: space-between;
 }
+
+.star {
+    height: 1em;
+}
+
+code {
+    font-size: 0.8rem;
+}
