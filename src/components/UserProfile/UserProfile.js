@@ -12,8 +12,13 @@ const UserProfile = () => {
     const octokit = useContext(OctokitContext);
 
     useEffect(() => {
-        const path = window.location.pathname.slice(1);
-        const username = path ? path.split('/')[0] : null;
+        let username = null;
+        try {
+            const path = window.location.pathname.slice(1);
+            username = path ? path.split('/')[0] : null;
+        } catch (error) {
+            setErrorMessage('There was an error parsing the username from the URL...');
+        }
 
         if (!username) {
             setErrorMessage('No username provided in the URL...');

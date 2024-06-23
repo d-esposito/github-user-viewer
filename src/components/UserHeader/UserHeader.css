@@ -1,5 +1,8 @@
 .profileHeader {
+    display: flex;
+    justify-content: center;
     position: fixed;
+    width: 100%;
     top: 0;
     background-color: var(--main-bg-color);
 }
@@ -12,7 +15,7 @@
 
     margin: 5em 5em;
     padding: 0.5em;
-    width: auto;
+    width: 30em;
 
     color: white;
     text-decoration: none;
