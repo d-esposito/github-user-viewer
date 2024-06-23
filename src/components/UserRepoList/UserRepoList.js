@@ -4,8 +4,12 @@ import { OctokitContext } from "../../contexts/OctokitContext";
 import './UserRepoList.css';
 
 
+const NUM_REPOS_PER_REQUEST = 30;
+
 const UserRepoList = ({ username }) => {
     const [searchString, setSearchString] = useState("");
+    const [page, setPage] = useState(1);
+    const [hasMoreRepos, setHasMoreRepos] = useState(true);
     const [repos, setRepos] = useState([]);
     const [filteredRepos, setFilteredRepos] = useState([]);
     const [errorMessage, setErrorMessage] = useState(null);
@@ -13,12 +17,26 @@ const UserRepoList = ({ username }) => {
 
     const fetchRepos = useCallback(async () => {
         try {
-            const { data } = await octokit.request(`GET /users/${username}/repos`);
-            setRepos(data);
+            const { data } = await octokit.request(`GET /users/${username}/repos`, {
+                per_page: NUM_REPOS_PER_REQUEST,
+                page: page,
+            });
+            setRepos((currentRepos) => {
+                const newRepos = data.filter(
+                    (repo) => !currentRepos.some((r) => r.id === repo.id)
+                );
+                return [...currentRepos, ...newRepos];
+            });
+
+            if(data.length < NUM_REPOS_PER_REQUEST) {
+                setHasMoreRepos(false);
+            } else {
+                setHasMoreRepos(true);
+            }
         } catch (error) {
             setErrorMessage(`There was an error when retrieving the user's repos...`);
         }
-    }, [octokit, username]);
+    }, [octokit, username, page]);
 
     useEffect(() => {
         fetchRepos();
@@ -46,7 +64,10 @@ const UserRepoList = ({ username }) => {
             />
             <InfiniteScroll
                 dataLength={repos.length}
+                next={() => setPage((currentPage) => currentPage + 1)}
+                hasMore={hasMoreRepos}
                 loader={<h4>Loading...</h4>}
+                scrollableTarget="repoListContainer"
             >
                 <ul>
                     {filteredRepos.map((repo) => (
