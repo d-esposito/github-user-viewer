@@ -33,10 +33,6 @@ ul {
     width: 100%;
 }
 
-li:first-child {
-    margin-top: 0;
-}
-
 li {
     display: flex;
     flex-direction: column;

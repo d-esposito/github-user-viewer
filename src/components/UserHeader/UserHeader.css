@@ -17,9 +17,6 @@
     padding: 0.5em;
     width: 30em;
 
-    color: white;
-    text-decoration: none;
-
     border: 1px solid var(--main-border-color);
     border-radius: 1000px;
 }
