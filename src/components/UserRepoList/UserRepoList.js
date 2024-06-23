@@ -62,22 +62,27 @@ const UserRepoList = ({ username }) => {
                 value={searchString}
                 onChange={(e) => setSearchString(e.target.value)}
             />
-            <InfiniteScroll
-                dataLength={repos.length}
-                next={() => setPage((currentPage) => currentPage + 1)}
-                hasMore={hasMoreRepos}
-                loader={<h4>Loading...</h4>}
-                scrollableTarget="repoListContainer"
-            >
-                <ul>
-                    {filteredRepos.map((repo) => (
-                        <li key={repo.id}>
-                            <span><h4>{repo.name}</h4><h6>Stars: {repo.stargazers_count}</h6></span>
-                            <span><p>{repo.description}</p><code>{repo.language}</code></span>
-                        </li>
-                    ))}
-                </ul>
-            </InfiniteScroll>
+            {
+                filteredRepos.length === 0 ?
+                (<h2>Couldn't find any repos</h2>) :
+                (
+                    <InfiniteScroll
+                        dataLength={repos.length}
+                        next={() => setPage((currentPage) => currentPage + 1)}
+                        hasMore={hasMoreRepos}
+                        loader={<h4>Loading...</h4>}
+                        scrollableTarget="repoListContainer"
+                    >
+                    <ul>
+                        {filteredRepos.map((repo) => (
+                            <li key={repo.id}>
+                                <span><h4>{repo.name}</h4><h6>Stars: {repo.stargazers_count}</h6></span>
+                                <span><p>{repo.description}</p><code>{repo.language}</code></span>
+                            </li>
+                        ))}
+                    </ul>
+                </InfiniteScroll>)
+            }
         </div>
     );
 };
